@@ -5,10 +5,15 @@
 package lab9p2_linsyposso;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -22,15 +27,14 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
-        HiloHora h=new HiloHora(jl_hora);
+        HiloHora h = new HiloHora(jl_hora);
         Thread proceso1 = new Thread(h);
-        proceso1.start(); 
-        
-        HilodeFecha f=new HilodeFecha(jl_fecha);
+        proceso1.start();
+
+        HilodeFecha f = new HilodeFecha(jl_fecha);
         Thread proceso2 = new Thread(f);
-        proceso2.start(); 
-        
-        
+        proceso2.start();
+
     }
 
     /**
@@ -159,6 +163,11 @@ public class Principal extends javax.swing.JFrame {
         jb_guardar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jb_guardar.setForeground(new java.awt.Color(0, 0, 0));
         jb_guardar.setText("Guardar");
+        jb_guardar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_guardarMouseClicked(evt);
+            }
+        });
         jPanel1.add(jb_guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 410, -1, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -176,28 +185,26 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_archivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_archivoMouseClicked
-        File fichero = null;
         FileReader fr = null;
         BufferedReader br = null;
         jta_archivo.setText("");
         try {
             JFileChooser jfc = new JFileChooser("./");
             FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Texto", "txt");
-            jfc.setFileFilter(filtro);        
+            jfc.setFileFilter(filtro);
             int seleccion = jfc.showOpenDialog(this);
-            if (seleccion == JFileChooser.APPROVE_OPTION)
-            {
-               fichero = jfc.getSelectedFile();
-               fr = new FileReader(fichero);
-               br=new BufferedReader(fr);
-               String linea;
-               jta_archivo.setText("");
-               while(  (linea=br.readLine()) !=null  ){                    
+            if (seleccion == JFileChooser.APPROVE_OPTION) {
+                fichero = jfc.getSelectedFile();
+                fr = new FileReader(fichero);
+                br = new BufferedReader(fr);
+                String linea;
+                jta_archivo.setText("");
+                while ((linea = br.readLine()) != null) {
                     jta_archivo.append(linea);
                     jta_archivo.append("\n");
                 }
             } //fin if
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,6 +214,17 @@ public class Principal extends javax.swing.JFrame {
         } catch (IOException ex) {
         }
     }//GEN-LAST:event_jb_archivoMouseClicked
+
+    private void jb_guardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_guardarMouseClicked
+        AdminArchivo text = new AdminArchivo(fichero);
+        String t = jta_archivo.getText();
+        try {
+            text.escribirArchivo(t);
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jb_guardarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -260,4 +278,5 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextArea jta_archivo;
     private javax.swing.JProgressBar pb_archivo;
     // End of variables declaration//GEN-END:variables
+File fichero;
 }
