@@ -192,7 +192,7 @@ public class Principal extends javax.swing.JFrame {
         load = new HiloCarga(pb_archivo, jta_archivo);
         Thread proceso3 = new Thread(load);
         proceso3.start();
-        
+        pb_archivo.setValue(0);
     }//GEN-LAST:event_jb_archivoMouseClicked
 
     private void jb_guardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_guardarMouseClicked
