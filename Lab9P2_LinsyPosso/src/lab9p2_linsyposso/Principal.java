@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -147,6 +149,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Subiendo Archivo");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, -1, -1));
+
+        pb_archivo.setForeground(new java.awt.Color(51, 255, 51));
         jPanel1.add(pb_archivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 154, 330, 20));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -174,7 +178,7 @@ public class Principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,44 +189,21 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_archivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_archivoMouseClicked
-        FileReader fr = null;
-        BufferedReader br = null;
-        jta_archivo.setText("");
-        try {
-            JFileChooser jfc = new JFileChooser("./");
-            FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Texto", "txt");
-            jfc.setFileFilter(filtro);
-            int seleccion = jfc.showOpenDialog(this);
-            if (seleccion == JFileChooser.APPROVE_OPTION) {
-                fichero = jfc.getSelectedFile();
-                fr = new FileReader(fichero);
-                br = new BufferedReader(fr);
-                String linea;
-                jta_archivo.setText("");
-                while ((linea = br.readLine()) != null) {
-                    jta_archivo.append(linea);
-                    jta_archivo.append("\n");
-                }
-            } //fin if
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            br.close();
-            fr.close();
-        } catch (IOException ex) {
-        }
+        load = new HiloCarga(pb_archivo, jta_archivo);
+        Thread proceso3 = new Thread(load);
+        proceso3.start();
+        
     }//GEN-LAST:event_jb_archivoMouseClicked
 
     private void jb_guardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_guardarMouseClicked
-        AdminArchivo text = new AdminArchivo(fichero);
+        AdminArchivo text = new AdminArchivo(load.getFichero());
         String t = jta_archivo.getText();
         try {
             text.escribirArchivo(t);
         } catch (IOException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
+        jta_archivo.setText("");
 
     }//GEN-LAST:event_jb_guardarMouseClicked
 
@@ -279,4 +260,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JProgressBar pb_archivo;
     // End of variables declaration//GEN-END:variables
 File fichero;
+    HiloCarga ab;
+    HiloCarga load; 
+
 }
