@@ -4,6 +4,13 @@
  */
 package lab9p2_linsyposso;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author 29164
@@ -125,6 +132,11 @@ public class Principal extends javax.swing.JFrame {
         jb_archivo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jb_archivo.setForeground(new java.awt.Color(0, 0, 0));
         jb_archivo.setText("Subir Archivo");
+        jb_archivo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_archivoMouseClicked(evt);
+            }
+        });
         jPanel1.add(jb_archivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -162,6 +174,39 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jb_archivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_archivoMouseClicked
+        File fichero = null;
+        FileReader fr = null;
+        BufferedReader br = null;
+        jta_archivo.setText("");
+        try {
+            JFileChooser jfc = new JFileChooser("./");
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Texto", "txt");
+            jfc.setFileFilter(filtro);        
+            int seleccion = jfc.showOpenDialog(this);
+            if (seleccion == JFileChooser.APPROVE_OPTION)
+            {
+               fichero = jfc.getSelectedFile();
+               fr = new FileReader(fichero);
+               br=new BufferedReader(fr);
+               String linea;
+               jta_archivo.setText("");
+               while(  (linea=br.readLine()) !=null  ){                    
+                    jta_archivo.append(linea);
+                    jta_archivo.append("\n");
+                }
+            } //fin if
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            br.close();
+            fr.close();
+        } catch (IOException ex) {
+        }
+    }//GEN-LAST:event_jb_archivoMouseClicked
 
     /**
      * @param args the command line arguments
